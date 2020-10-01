@@ -1,0 +1,34 @@
+{
+    "name": "mokap",
+    "version": "1.0.0",
+    "description": "Data mocking",
+    "main": "index.js",
+    "scripts": {
+        "dev": "parcel src/index.html"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AlfieGoldson/Mokap.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/AlfieGoldson/Mokap/issues"
+    },
+    "homepage": "https://github.com/AlfieGoldson/Mokap#readme",
+    "devDependencies": {
+        "@babel/core": "^7.11.6",
+        "@babel/preset-env": "^7.11.5",
+        "@babel/preset-react": "^7.10.4",
+        "@types/react": "^16.9.49",
+        "@types/react-dom": "^16.9.8",
+        "parcel-bundler": "^1.12.4",
+        "prettier": "^2.1.2",
+        "typescript": "^4.0.3"
+    },
+    "dependencies": {
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1"
+    }
+}
