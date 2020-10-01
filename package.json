@@ -21,9 +21,11 @@
         "@babel/core": "^7.11.6",
         "@babel/preset-env": "^7.11.5",
         "@babel/preset-react": "^7.10.4",
+        "@babel/preset-typescript": "^7.10.4",
+        "@parcel/validator-typescript": "^2.0.0-nightly.415",
         "@types/react": "^16.9.49",
         "@types/react-dom": "^16.9.8",
-        "parcel-bundler": "^1.12.4",
+        "parcel": "^2.0.0-nightly.413",
         "prettier": "^2.1.2",
         "typescript": "^4.0.3"
     },
