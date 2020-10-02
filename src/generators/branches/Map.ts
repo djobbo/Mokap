@@ -1,8 +1,11 @@
 import { mok } from '../types';
 import { getMok } from '../';
 
-export const mockMap = <T extends keyof any, U>(value: { [k in T]: mok<U> }) => () =>
-    Object.entries<mok<U>>(value).reduce<{ [k in T]?: mok<U> }>(
-        (acc, [key, val]) => ({ ...acc, [key]: getMok(val) }),
+export const mockMap = <T>(value: { [K in keyof T]: mok<T[K]> }) => (...i: number[]): { [K in keyof T]: T[K] } =>
+    Object.entries(value).reduce<{ [K in keyof T]?: T[K] }>(
+        (acc, [key, val]) => ({
+            ...acc,
+            [key]: getMok(val, ...i),
+        }),
         {},
-    );
+    ) as any;

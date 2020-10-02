@@ -10,8 +10,8 @@ export const randomNumber = (minMok: mok<number>, maxMok: mok<number>) => {
 
 export const randomInt = (min: mok<number>, max: mok<number>) => Math.floor(randomNumber(min, max));
 
-export const randomArray = <T>(length: mok<number>, fun: (i: number) => T): mok<T[]> =>
-    new Array(getMok(length)).fill(null).map((_, i) => fun(i));
+export const randomArray = <T>(length: mok<number>, fun: (...i: number[]) => T, indexes: number[] = []) =>
+    new Array(getMok(length)).fill(null).map((_, i) => fun(i, ...indexes));
 
 export const randomDate = (start: Date, end: Date) =>
     new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));

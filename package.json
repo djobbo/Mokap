@@ -4,7 +4,7 @@
     "description": "Data mocking",
     "main": "index.js",
     "scripts": {
-        "dev": "parcel src/index.tsx"
+        "dev": "parcel src/index.html"
     },
     "repository": {
         "type": "git",
@@ -32,8 +32,10 @@
         "typescript": "^4.0.3"
     },
     "dependencies": {
+        "drange": "^2.0.1",
         "randexp": "^0.5.3",
         "react": "^16.13.1",
-        "react-dom": "^16.13.1"
+        "react-dom": "^16.13.1",
+        "ret": "^0.3.1"
     }
 }

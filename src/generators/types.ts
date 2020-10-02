@@ -1,1 +1,1 @@
-export type mok<T> = T | ((index?: number) => T);
+export type mok<T> = T | ((...i: number[]) => T);

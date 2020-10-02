@@ -21,12 +21,36 @@ const MoksContainer = styled.div`
 `;
 
 const App: FC = () => {
-    console.log(mok);
+    const hobbyNames = ['VideoGames', 'Code', 'GD'];
+
+    const hobbys = mok.map({
+        name: mok.ch(...hobbyNames),
+        practiceTime: () => `${mok.num(1, 10)()} ${mok.ch('days', 'months', 'years')()}`,
+    });
+
+    const person = mok.map({
+        name: mok.str(/[A-Z][a-z]{5,15}/),
+        id: (i) => i,
+        hobbys: mok.arr(hobbys, mok.num(2, 4)),
+        xd: mok.bool,
+    });
+
+    const mock = mok.arr(person, 4)();
 
     return (
         <>
             <GlobalStyle />
             <Card title="New Mok">
+                {mock.map(({ name, id, hobbys, xd }) => (
+                    <div key={id}>
+                        <h2>{name}</h2>
+                        {hobbys.map((hobby) => (
+                            <div key={Math.random()}>
+                                <strong>{hobby.name}</strong> {hobby.practiceTime}
+                            </div>
+                        ))}
+                    </div>
+                ))}
                 {/* <MoksContainer>
                     <Mok />
                     <Mok mokType="bool" />
