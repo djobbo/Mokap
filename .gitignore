@@ -1,11 +1,11 @@
 logs
 *.log
 
-coverage
+coverage/
 node_modules/
 
 .env
 
-.parcel-cache/
+.next/
 
 dist/

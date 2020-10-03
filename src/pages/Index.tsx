@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 
-import { Card } from './components/Card';
-import { Mok } from './components/Mok';
-import mok from './generators';
+import mok from '../generators';
+import { Card } from '../components/Card';
 
 const GlobalStyle = createGlobalStyle`
     * {
@@ -16,9 +15,9 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
-const MoksContainer = styled.div`
-    padding: 1rem;
-`;
+// const MoksContainer = styled.div`
+//     padding: 1rem;
+// `;
 
 const App: FC = () => {
     const hobbyNames = ['VideoGames', 'Code', 'GD'];
@@ -41,7 +40,7 @@ const App: FC = () => {
         <>
             <GlobalStyle />
             <Card title="New Mok">
-                {mock.map(({ name, id, hobbys, xd }) => (
+                {mock.map(({ name, id, hobbys }) => (
                     <div key={id}>
                         <h2>{name}</h2>
                         {hobbys.map((hobby) => (
@@ -61,4 +60,4 @@ const App: FC = () => {
     );
 };
 
-export { App };
+export default App;

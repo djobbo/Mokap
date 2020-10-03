@@ -1,14 +1,6 @@
-import { randomArray, randomInt } from '../generators';
+import { randomArray } from '../generators';
 import { mok } from '../types';
 import { getMok } from '../';
-import { hasOwnProperty } from '../../util/hasOwnProperty';
 
-export const mockArray = <T>(value: mok<T>, length: mok<number> | { min: mok<number>; max: mok<number> } = 0) => (
-    ...indexes: number[]
-) =>
-    randomArray(
-        hasOwnProperty(length, 'min') ? randomInt(length.min, length.max) : getMok(length, ...indexes),
-        (...i) => {
-            return getMok(value, ...[...i, ...indexes]);
-        },
-    );
+export const mockArray = <T>(value: mok<T>, length: mok<number>) => (...indexes: number[]): T[] =>
+    randomArray(getMok(length, ...indexes), (...i) => getMok(value, ...[...i, ...indexes]));

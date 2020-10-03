@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, useReducer, Reducer } from 'react';
+import React, { FC, PropsWithChildren } from 'react';
 import styled from 'styled-components';
 import mok from '../generators';
 
@@ -57,11 +57,6 @@ type MokType = keyof typeof mok | 'constant';
 type Props = PropsWithChildren<{
     mokType?: MokType;
 }>;
-
-type Action =
-    | { type: 'constant' }
-    | { type: 'arr'; array: string[] }
-    | { type: 'map'; error: { [k in MokType]: string } };
 
 const Mok: FC<Props> = ({ children, mokType = 'constant' }: Props) => {
     // const [mokState, setMockState] = useReducer<Reducer<MokState, Action>>(reducer, {type: mokType}, )

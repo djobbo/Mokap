@@ -7,7 +7,8 @@ import { mockNumber as num } from './branches/Number';
 import { mockMap as map } from './branches/Map';
 import { mockString as str } from './branches/String';
 
-export const getMok = <T>(value: mok<T>, ...index: number[]) => (value instanceof Function ? value(...index) : value);
+export const getMok = <T>(value: mok<T>, ...index: number[]): T =>
+    value instanceof Function ? value(...index) : value;
 
 export default {
     bool,

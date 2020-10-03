@@ -4,7 +4,11 @@
     "description": "Data mocking",
     "main": "index.js",
     "scripts": {
-        "dev": "parcel src/index.html"
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "eslint src --ext .ts,.tsx",
+        "lint:fix": "npm run lint -- --fix"
     },
     "repository": {
         "type": "git",
@@ -18,24 +22,37 @@
     },
     "homepage": "https://github.com/AlfieGoldson/Mokap#readme",
     "devDependencies": {
-        "@babel/core": "^7.11.6",
-        "@babel/preset-env": "^7.11.5",
-        "@babel/preset-react": "^7.10.4",
-        "@babel/preset-typescript": "^7.10.4",
-        "@parcel/validator-typescript": "^2.0.0-nightly.417",
         "@types/react": "^16.9.50",
         "@types/react-dom": "^16.9.8",
         "@types/styled-components": "^5.1.3",
-        "parcel": "^2.0.0-nightly.415",
+        "@typescript-eslint/eslint-plugin": "^4.3.0",
+        "@typescript-eslint/parser": "^4.3.0",
+        "eslint": "^7.10.0",
+        "eslint-config-prettier": "^6.12.0",
+        "eslint-plugin-jsx-a11y": "^6.3.1",
+        "eslint-plugin-prettier": "^3.1.4",
+        "eslint-plugin-react": "^7.21.3",
+        "eslint-plugin-react-hooks": "^4.1.2",
+        "husky": "^4.3.0",
+        "lint-staged": "^10.4.0",
         "prettier": "^2.1.2",
         "styled-components": "^5.2.0",
         "typescript": "^4.0.3"
     },
     "dependencies": {
         "drange": "^2.0.1",
+        "next": "^9.5.3",
         "randexp": "^0.5.3",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "ret": "^0.3.1"
+    },
+    "lint-staged": {
+        "src/**/*.{ts,tsx}": "npm run lint:fix"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
     }
 }

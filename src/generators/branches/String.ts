@@ -3,7 +3,7 @@ import DRange from 'drange';
 import { randomBoolean, randomInt, randomValueFromArray } from '../generators';
 const { ROOT, GROUP, POSITION, SET, REPETITION, REFERENCE, CHAR, RANGE } = ret.types;
 
-export const mockString = (value: RegExp) => () => RandExp(value);
+export const mockString = (value: RegExp) => (): string => RandExp(value);
 
 const toOtherCase = (code: number) => code + (97 <= code && code <= 122 ? -32 : 65 <= code && code <= 90 ? 32 : 0);
 
@@ -16,8 +16,8 @@ interface IGenOptions {
     defaultRange: DRange;
 }
 
-export const RandExp = (regexp: RegExp) => {
-    let pattern = regexp.source;
+export const RandExp = (regexp: RegExp): string => {
+    const pattern = regexp.source;
     const options = {
         ignoreCase: regexp.ignoreCase,
         multiline: regexp.multiline,
@@ -45,13 +45,13 @@ function genGroup(token: Root | Group, groups: string[] = [], options: IGenOptio
 }
 
 function gen(token: Tokens, groups: string[] = [], options: IGenOptions): [string, string[]] {
-    let str: string = '';
+    let str = '';
     let newGroups: string[] = groups;
 
     switch (token.type) {
         case ROOT:
             [str, newGroups] = genGroup(token, groups, options);
-            break; // ???
+            break;
 
         case GROUP:
             // Ignore lookaheads for now.
@@ -63,18 +63,20 @@ function gen(token: Tokens, groups: string[] = [], options: IGenOptions): [strin
         case POSITION:
             break;
 
-        case SET:
+        case SET: {
             const expandedSet = expandSet(token, options);
             str = expandedSet.length ? String.fromCharCode(randomDRange(expandedSet)) : '';
             break;
+        }
 
         case REPETITION:
-            // Randomly generate number between min and max.
-            const n = randomInt(token.min, token.max === Infinity ? token.min + options.max : token.max);
+            {
+                const n = randomInt(token.min, token.max === Infinity ? token.min + options.max : token.max);
 
-            for (let i = 0; i < n; i++) {
-                const g = gen(token.value, groups, options);
-                [str, newGroups] = [(str += g[0]), g[1]];
+                for (let i = 0; i < n; i++) {
+                    const g = gen(token.value, groups, options);
+                    [str, newGroups] = [(str += g[0]), g[1]];
+                }
             }
 
             break;
@@ -83,10 +85,11 @@ function gen(token: Tokens, groups: string[] = [], options: IGenOptions): [strin
             str = groups[token.value - 1] || '';
             break;
 
-        case CHAR:
+        case CHAR: {
             const code = options.ignoreCase && randomBoolean() ? toOtherCase(token.value) : token.value;
             str = String.fromCharCode(code);
             break;
+        }
     }
     return [str, newGroups];
 }
@@ -99,17 +102,17 @@ function expandSet(token: Char | Range | Set, options: IGenOptions) {
         case RANGE:
             return new DRange(token.from, token.to);
 
-        case SET:
-            let drange = new DRange();
+        case SET: {
+            const drange = new DRange();
 
             for (let i = 0; i < token.set.length; i++) {
-                let subrange = expandSet(token.set[i], options);
+                const subrange = expandSet(token.set[i], options);
                 drange.add(subrange);
 
                 if (options.ignoreCase)
                     for (let j = 0; j < subrange.length; j++) {
-                        let code = subrange.index(j);
-                        let otherCaseCode = toOtherCase(code);
+                        const code = subrange.index(j);
+                        const otherCaseCode = toOtherCase(code);
                         if (code !== otherCaseCode) drange.add(otherCaseCode);
                     }
             }
@@ -117,5 +120,6 @@ function expandSet(token: Char | Range | Set, options: IGenOptions) {
             return token.not
                 ? options.defaultRange.clone().subtract(drange)
                 : options.defaultRange.clone().intersect(drange);
+        }
     }
 }
