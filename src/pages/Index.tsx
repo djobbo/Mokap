@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 
 import mok from '../generators';
 import { Card } from '../components/Card';
+import { Mok } from '../components/Mok';
 
 const GlobalStyle = createGlobalStyle`
     * {
@@ -15,9 +16,9 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
-// const MoksContainer = styled.div`
-//     padding: 1rem;
-// `;
+const MoksContainer = styled.div`
+    padding: 1rem;
+`;
 
 const App: FC = () => {
     const hobbyNames = ['VideoGames', 'Code', 'GD'];
@@ -40,22 +41,22 @@ const App: FC = () => {
         <>
             <GlobalStyle />
             <Card title="New Mok">
-                {mock.map(({ name, id, hobbys }) => (
-                    <div key={id}>
-                        <h2>{name}</h2>
-                        {hobbys.map((hobby) => (
-                            <div key={Math.random()}>
-                                <strong>{hobby.name}</strong> {hobby.practiceTime}
-                            </div>
-                        ))}
-                    </div>
-                ))}
-                {/* <MoksContainer>
+                <MoksContainer>
                     <Mok />
                     <Mok mokType="bool" />
                     <Mok mokType="map" />
-                </MoksContainer> */}
+                </MoksContainer>
             </Card>
+            {mock.map(({ name, id, hobbys }) => (
+                <div key={id}>
+                    <h2>{name}</h2>
+                    {hobbys.map((hobby) => (
+                        <div key={Math.random()}>
+                            <strong>{hobby.name}</strong> {hobby.practiceTime}
+                        </div>
+                    ))}
+                </div>
+            ))}
         </>
     );
 };

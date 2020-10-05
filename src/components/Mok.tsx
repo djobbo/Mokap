@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren } from 'react';
+import React, { FC, PropsWithChildren, ReactElement } from 'react';
 import styled from 'styled-components';
 import mok from '../generators';
 
@@ -54,11 +54,11 @@ const MokInput = styled.input`
 
 type MokType = keyof typeof mok | 'constant';
 
-type Props = PropsWithChildren<{
-    mokType?: MokType;
+type Props<T extends MokType> = PropsWithChildren<{
+    mokType?: T;
 }>;
 
-const Mok: FC<Props> = ({ children, mokType = 'constant' }: Props) => {
+function Mok<T extends MokType>({ children, mokType = 'constant' }: Props<T>): ReactElement {
     // const [mokState, setMockState] = useReducer<Reducer<MokState, Action>>(reducer, {type: mokType}, )
 
     return (
@@ -92,6 +92,6 @@ const Mok: FC<Props> = ({ children, mokType = 'constant' }: Props) => {
             {children}
         </Wrapper>
     );
-};
+}
 
 export { Mok };
