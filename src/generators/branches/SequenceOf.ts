@@ -1,6 +1,11 @@
-import { randomArray } from '../generators';
 import { mok } from '../types';
 import { getMok } from '..';
 
-export const mockSequenceOf = <T>(value: mok<T>, length: mok<number>) => (...indexes: number[]): T[] =>
-    randomArray(getMok(length, ...indexes), (...i) => getMok(value, ...[...i, ...indexes]));
+type ArrayMok<T> = {
+    [P in keyof T]?: mok<P>;
+};
+
+export const mockSequenceOf = <T extends any[]>(...value: ArrayMok<T>) => (...indexes: number[]) =>
+    value.map((x) => getMok(x, ...indexes));
+
+const m = mockSequenceOf(() => 1, 2, 3, '4');
