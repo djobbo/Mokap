@@ -2,33 +2,33 @@ import styled from 'styled-components';
 
 export const MokWrapper = styled.div`
     position: relative;
-    padding: 1rem;
-    margin-left: 1rem;
-    border: 1px solid red;
+    margin: 0.5rem 0.5rem 0.5rem 1rem;
 
     &::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 1rem;
-        /* border-left: 1px solid #d9dcde; */
-        border-left: 1px solid #000;
-    }
-
-    &::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: -1rem;
-        width: 1rem;
+        top: -0.5rem;
+        left: -0.5rem;
+        bottom: 0;
         /* border-bottom: 1px solid #d9dcde; */
-        border-left: 1px solid #000;
+        width: 2px;
+        background-color: #d9dcde;
     }
 
-    &:last-of-type:before {
-        height: 2rem;
+    &:last-child:before {
+        bottom: auto;
+        height: 1.5rem;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 1rem;
+        left: -0.5rem;
+        width: 0.5rem;
+        height: 2px;
+        background-color: #d9dcde;
+        /* border-bottom: 1px solid #d9dcde; */
     }
 `;
 

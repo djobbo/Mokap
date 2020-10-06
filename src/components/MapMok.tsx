@@ -19,7 +19,7 @@ const MapMok: FC<Props> = ({ updateParentMok }: Props) => {
     }, [mok]);
 
     return (
-        <MokWrapper>
+        <>
             {mok.map(([key, name, val]) => (
                 <MokWrapper key={key}>
                     <MokInput
@@ -46,7 +46,7 @@ const MapMok: FC<Props> = ({ updateParentMok }: Props) => {
                     ></Mok>
                 </MokWrapper>
             ))}
-            <div>
+            <MokWrapper>
                 <button
                     onClick={() =>
                         setMok((state) => {
@@ -56,8 +56,8 @@ const MapMok: FC<Props> = ({ updateParentMok }: Props) => {
                 >
                     +
                 </button>
-            </div>
-        </MokWrapper>
+            </MokWrapper>
+        </>
     );
 };
 

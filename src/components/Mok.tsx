@@ -50,39 +50,41 @@ function Mok({ updateParentMok }: Props): ReactElement {
                 <option value="arr">Array</option>
             </MokSelect>
             {mokState.mokType === 'constant' && (
-                <div>
+                <MokWrapper>
                     <MokInput
                         type="text"
                         value={mokState.value}
                         onChange={(e) => setMokState({ mokType: 'constant', value: e.target.value })}
                     />
-                </div>
+                </MokWrapper>
             )}
             {mokState.mokType === 'map' && (
-                <div>
+                <>
                     <MapMok
                         updateParentMok={(state: { [k in string]: mok<any> }) =>
                             setMokState({ mokType: 'map', value: state })
                         }
                     />
-                </div>
+                </>
             )}
             {mokState.mokType === 'arr' && (
-                <div>
-                    <MokInput
-                        type="number"
-                        value={mokState.length}
-                        onChange={(e) => {
-                            const { target } = e;
-                            const length = Math.max(0, parseInt(target.value || '0'));
-                            setMokState({
-                                mokType: 'arr',
-                                mok: mokState.mok,
-                                value: moks.arr(mokState.mok, length),
-                                length,
-                            });
-                        }}
-                    />
+                <>
+                    <MokWrapper>
+                        <MokInput
+                            type="number"
+                            value={mokState.length}
+                            onChange={(e) => {
+                                const { target } = e;
+                                const length = Math.max(0, parseInt(target.value || '0'));
+                                setMokState({
+                                    mokType: 'arr',
+                                    mok: mokState.mok,
+                                    value: moks.arr(mokState.mok, length),
+                                    length,
+                                });
+                            }}
+                        />
+                    </MokWrapper>
                     <Mok
                         updateParentMok={(updatedMok: mok<any>) => {
                             setMokState({
@@ -93,7 +95,7 @@ function Mok({ updateParentMok }: Props): ReactElement {
                             });
                         }}
                     ></Mok>
-                </div>
+                </>
             )}
         </MokWrapper>
     );
