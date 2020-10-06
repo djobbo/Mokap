@@ -8,12 +8,13 @@ import { mok } from '../generators/types';
 
 const GlobalStyle = createGlobalStyle`
     * {
-    font-family: "Inter";
-    box-sizing: border-box;
+        font-family: "Inter";
+        box-sizing: border-box;
+        border: none;
     }
     
     body{
-    background-color: #eff1f3;
+        background-color: #eff1f3;
     }
 `;
 

@@ -29,7 +29,7 @@ module.exports = {
             {
                 labelComponents: [],
                 labelAttributes: [],
-                controlComponents: [],
+                controlComponents: ['MokInput'],
                 assert: 'either',
                 depth: 25,
             },

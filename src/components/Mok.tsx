@@ -3,7 +3,7 @@ import moks from '../generators';
 import { mok } from '../generators/types';
 import { MapMok } from './MapMok';
 
-import { MokWrapper, MokInput, MokSelect } from './MokElements';
+import { MokWrapper, MokInput, MokSelect, MokInputContainer } from './MokElements';
 
 type MokType = keyof typeof moks | 'constant';
 
@@ -70,20 +70,26 @@ function Mok({ updateParentMok }: Props): ReactElement {
             {mokState.mokType === 'sequenceOf' && (
                 <>
                     <MokWrapper>
-                        <MokInput
-                            type="number"
-                            value={mokState.length}
-                            onChange={(e) => {
-                                const { target } = e;
-                                const length = Math.max(0, parseInt(target.value || '0'));
-                                setMokState({
-                                    mokType: 'sequenceOf',
-                                    mok: mokState.mok,
-                                    value: moks.sequenceOf(mokState.mok, length),
-                                    length,
-                                });
-                            }}
-                        />
+                        <MokInputContainer>
+                            <label>
+                                length
+                                <MokInput
+                                    label
+                                    type="number"
+                                    value={mokState.length}
+                                    onChange={(e) => {
+                                        const { target } = e;
+                                        const length = Math.max(0, parseInt(target.value || '0'));
+                                        setMokState({
+                                            mokType: 'sequenceOf',
+                                            mok: mokState.mok,
+                                            value: moks.sequenceOf(mokState.mok, length),
+                                            length,
+                                        });
+                                    }}
+                                />
+                            </label>
+                        </MokInputContainer>
                     </MokWrapper>
                     <Mok
                         updateParentMok={(updatedMok: mok<any>) => {

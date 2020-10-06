@@ -32,7 +32,7 @@ export const MokWrapper = styled.div`
     }
 `;
 
-export const MokInput = styled.input`
+export const MokInput = styled.input<{ label?: boolean }>`
     padding: 0.75rem 1rem;
     border: none;
     border-radius: 0.5rem;
@@ -44,6 +44,31 @@ export const MokInput = styled.input`
     &:focus {
         box-shadow: 0 0 0px 2px #0059ff44;
         border-color: transparent;
+    }
+
+    ${({ label }) =>
+        label &&
+        `
+        border-radius: 0 0.5rem 0.5rem 0;
+    `}
+`;
+
+export const MokInputContainer = styled.div`
+    border-radius: 0.5rem;
+    background-color: #d9dcde;
+    padding-left: 1rem;
+    display: inline-flex;
+    align-items: center;
+
+    label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        font-weight: bold;
+        color: #3a3d40;
+
+        input {
+            margin-left: 1rem;
+        }
     }
 `;
 
@@ -59,5 +84,21 @@ export const MokSelect = styled.select`
     &:focus {
         box-shadow: 0 0 0px 2px #0059ff44;
         border-color: transparent;
+    }
+`;
+
+export const AddMokButton = styled.button`
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    background-color: transparent;
+    color: #d9dcde;
+    cursor: pointer;
+
+    &:hover {
+        color: #919aa1;
     }
 `;
