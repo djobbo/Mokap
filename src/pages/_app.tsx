@@ -1,8 +1,9 @@
 import Head from 'next/head';
 
 import type { AppProps } from 'next/app';
+import { ReactElement } from 'react';
 
-function _App({ Component, pageProps }: AppProps) {
+function _App({ Component, pageProps }: AppProps): ReactElement {
     return (
         <>
             <Head>

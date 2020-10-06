@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 
-import moks, { getMok } from '../generators';
+import { getMok } from '../generators';
 import { Card } from '../components/Card';
 import { Mok } from '../components/Mok';
 import { mok } from '../generators/types';
@@ -41,7 +41,6 @@ const App: FC = () => {
                 </MoksContainer>
             </Card>
             <div>{JSON.stringify(finalMokValue)}</div>
-            <button onClick={refreshMok}>Refresh</button>
         </>
     );
 };

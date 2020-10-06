@@ -16,7 +16,7 @@ function Mok({ updateParentMok }: Props): ReactElement {
         | { mokType: 'constant'; value: string }
         | { mokType: 'bool'; value: mok<boolean> }
         | { mokType: 'map'; value: { [k: string]: mok<unknown> } }
-        | { mokType: 'arr'; value: mok<unknown>; length: number; mok: mok<unknown> } // TODO: make length a mok
+        | { mokType: 'sequenceOf'; value: mok<unknown>; length: number; mok: mok<unknown> } // TODO: make length a mok
     >({ mokType: 'constant', value: '' });
 
     const handleMokTypeChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -31,7 +31,7 @@ function Mok({ updateParentMok }: Props): ReactElement {
             case 'map':
                 setMokState({ mokType, value: {} });
                 return;
-            case 'arr':
+            case 'sequenceOf':
                 setMokState({ mokType, value: [], mok: '', length: 0 });
                 return;
         }
@@ -47,7 +47,7 @@ function Mok({ updateParentMok }: Props): ReactElement {
                 <option value="constant">Constant</option>
                 <option value="map">Map</option>
                 <option value="bool">Boolean</option>
-                <option value="arr">Array</option>
+                <option value="sequenceOf">Sequence</option>
             </MokSelect>
             {mokState.mokType === 'constant' && (
                 <MokWrapper>
@@ -67,7 +67,7 @@ function Mok({ updateParentMok }: Props): ReactElement {
                     />
                 </>
             )}
-            {mokState.mokType === 'arr' && (
+            {mokState.mokType === 'sequenceOf' && (
                 <>
                     <MokWrapper>
                         <MokInput
@@ -77,9 +77,9 @@ function Mok({ updateParentMok }: Props): ReactElement {
                                 const { target } = e;
                                 const length = Math.max(0, parseInt(target.value || '0'));
                                 setMokState({
-                                    mokType: 'arr',
+                                    mokType: 'sequenceOf',
                                     mok: mokState.mok,
-                                    value: moks.arr(mokState.mok, length),
+                                    value: moks.sequenceOf(mokState.mok, length),
                                     length,
                                 });
                             }}
@@ -88,9 +88,9 @@ function Mok({ updateParentMok }: Props): ReactElement {
                     <Mok
                         updateParentMok={(updatedMok: mok<any>) => {
                             setMokState({
-                                mokType: 'arr',
+                                mokType: 'sequenceOf',
                                 mok: updatedMok,
-                                value: moks.arr(updatedMok, mokState.length),
+                                value: moks.sequenceOf(updatedMok, mokState.length),
                                 length: mokState.length,
                             });
                         }}
