@@ -1,96 +1,101 @@
-import React, { FC, PropsWithChildren, ReactElement } from 'react';
-import styled from 'styled-components';
-import mok from '../generators';
+import React, { ReactElement, useEffect, useState } from 'react';
+import moks from '../generators';
+import { mok } from '../generators/types';
+import { MapMok } from './MapMok';
 
-const Wrapper = styled.div`
-    position: relative;
-    padding: 1rem;
-    margin-left: 1rem;
-    display: flex;
-    align-items: center;
+import { MokWrapper, MokInput, MokSelect } from './MokElements';
 
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 1rem;
-        border-left: 1px solid #d9dcde;
-    }
+type MokType = keyof typeof moks | 'constant';
 
-    &:last-of-type:before {
-        height: 2rem;
-    }
-`;
+interface Props {
+    updateParentMok: (updateMok: mok<any>) => void;
+}
 
-const MokContent = styled.div`
-    position: relative;
+function Mok({ updateParentMok }: Props): ReactElement {
+    const [mokState, setMokState] = useState<
+        | { mokType: 'constant'; value: string }
+        | { mokType: 'bool'; value: mok<boolean> }
+        | { mokType: 'map'; value: { [k: string]: mok<unknown> } }
+        | { mokType: 'arr'; value: mok<unknown>; length: number; mok: mok<unknown> } // TODO: make length a mok
+    >({ mokType: 'constant', value: '' });
 
-    &::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: -1rem;
-        width: 1rem;
-        border-bottom: 1px solid #d9dcde;
-    }
-`;
+    const handleMokTypeChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const mokType = e.target.value as MokType;
+        switch (mokType) {
+            case 'constant':
+                setMokState({ mokType, value: '' });
+                return;
+            case 'bool':
+                setMokState({ mokType, value: moks.bool });
+                return;
+            case 'map':
+                setMokState({ mokType, value: {} });
+                return;
+            case 'arr':
+                setMokState({ mokType, value: [], mok: '', length: 0 });
+                return;
+        }
+    };
 
-const MokInput = styled.input`
-    padding: 0.75rem 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    outline: none;
-    transition: 0.15s all ease;
-    background-color: #eff1f3;
-    border: 1px solid #d9dcde;
-
-    &:focus {
-        box-shadow: 0 0 0px 2px #0059ff44;
-        border-color: transparent;
-    }
-`;
-
-type MokType = keyof typeof mok | 'constant';
-
-type Props<T extends MokType> = PropsWithChildren<{
-    mokType?: T;
-}>;
-
-function Mok<T extends MokType>({ children, mokType = 'constant' }: Props<T>): ReactElement {
-    // const [mokState, setMockState] = useReducer<Reducer<MokState, Action>>(reducer, {type: mokType}, )
+    useEffect(() => {
+        updateParentMok(mokState.value);
+    }, [mokState]);
 
     return (
-        <Wrapper>
-            <h3>Field Name</h3>
-            <select>
-                <option value="arr">Array</option>
-                <option value="map">Number</option>
+        <MokWrapper>
+            <MokSelect onChange={handleMokTypeChange}>
+                <option value="constant">Constant</option>
+                <option value="map">Map</option>
                 <option value="bool">Boolean</option>
-            </select>
-            {mokType === 'bool' && (
-                <MokContent>
-                    <select>
-                        <option value="true">true</option>
-                        <option value="false">false</option>
-                    </select>
-                </MokContent>
+                <option value="arr">Array</option>
+            </MokSelect>
+            {mokState.mokType === 'constant' && (
+                <div>
+                    <MokInput
+                        type="text"
+                        value={mokState.value}
+                        onChange={(e) => setMokState({ mokType: 'constant', value: e.target.value })}
+                    />
+                </div>
             )}
-
-            {mokType === 'arr' && (
-                <MokContent>
-                    <MokInput placeholder="array" />
-                </MokContent>
+            {mokState.mokType === 'map' && (
+                <div>
+                    <MapMok
+                        updateParentMok={(state: { [k in string]: mok<any> }) =>
+                            setMokState({ mokType: 'map', value: state })
+                        }
+                    />
+                </div>
             )}
-
-            {mokType === 'map' && (
-                <MokContent>
-                    <Mok mokType="arr"></Mok>
-                </MokContent>
+            {mokState.mokType === 'arr' && (
+                <div>
+                    <MokInput
+                        type="number"
+                        value={mokState.length}
+                        onChange={(e) => {
+                            const { target } = e;
+                            const length = Math.max(0, parseInt(target.value || '0'));
+                            setMokState({
+                                mokType: 'arr',
+                                mok: mokState.mok,
+                                value: moks.arr(mokState.mok, length),
+                                length,
+                            });
+                        }}
+                    />
+                    <Mok
+                        updateParentMok={(updatedMok: mok<any>) => {
+                            setMokState({
+                                mokType: 'arr',
+                                mok: updatedMok,
+                                value: moks.arr(updatedMok, mokState.length),
+                                length: mokState.length,
+                            });
+                        }}
+                    ></Mok>
+                </div>
             )}
-            {children}
-        </Wrapper>
+        </MokWrapper>
     );
 }
 
