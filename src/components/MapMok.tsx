@@ -5,14 +5,16 @@ import { Mok } from './Mok';
 import { mok } from '../generators/types';
 import { IJSONMok } from '../generators/parsers';
 
-import { Droppable } from 'react-beautiful-dnd';
+import { randomBytes } from 'crypto';
+
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 interface Props {
   updateParentMok: (updateMok: IJSONMok) => void;
 }
 
 const MapMok: FC<Props> = ({ updateParentMok }: Props) => {
-  const [mok, setMok] = useState<[symbol, string, IJSONMok][]>([]);
+  const [mok, setMok] = useState<[string, string, IJSONMok][]>([]);
 
   useEffect(() => {
     updateParentMok({ mokType: 'map', items: mok.map(([, name, item]) => [name, item]) });
@@ -21,44 +23,49 @@ const MapMok: FC<Props> = ({ updateParentMok }: Props) => {
   return (
     <Droppable droppableId={Symbol().toString()}>
       {(provided) => (
-        <>
-          {mok.map(([key, name, val]) => (
-            <MokWrapper key={key.toString()}>
-              <MokInputContainer>
-                <label>
-                  key
-                  <MokInput
-                    hasLabel
-                    type="text"
-                    value={name}
-                    onChange={(e) =>
+        <div ref={provided.innerRef} {...provided.droppableProps}>
+          {mok.map(([key, name, val], i) => (
+            <Draggable draggableId={key} key={key} index={i}>
+              {({ draggableProps, dragHandleProps, innerRef }) => (
+                <MokWrapper {...draggableProps} {...dragHandleProps} ref={innerRef}>
+                  <MokInputContainer>
+                    <label>
+                      key
+                      <MokInput
+                        hasLabel
+                        type="text"
+                        value={name}
+                        onChange={(e) =>
+                          setMok((state) => {
+                            const newState = [...state];
+                            const i = newState?.findIndex(([k]) => k === key);
+                            newState[i] = [key, e.target.value, val];
+                            return newState;
+                          })
+                        }
+                      />
+                    </label>
+                  </MokInputContainer>
+                  <Mok
+                    updateParentMok={(updatedMok: mok<any>) => {
                       setMok((state) => {
                         const newState = [...state];
                         const i = newState?.findIndex(([k]) => k === key);
-                        newState[i] = [key, e.target.value, val];
+                        newState[i] = [key, name, updatedMok];
                         return newState;
-                      })
-                    }
-                  />
-                </label>
-              </MokInputContainer>
-              <Mok
-                updateParentMok={(updatedMok: mok<any>) => {
-                  setMok((state) => {
-                    const newState = [...state];
-                    const i = newState?.findIndex(([k]) => k === key);
-                    newState[i] = [key, name, updatedMok];
-                    return newState;
-                  });
-                }}
-              ></Mok>
-            </MokWrapper>
+                      });
+                    }}
+                  ></Mok>
+                </MokWrapper>
+              )}
+            </Draggable>
           ))}
-          <MokWrapper innerRef={provided.innerRef} {...provided.droppableProps}>
+          {provided.placeholder}
+          <MokWrapper>
             <AddMokButton
               onClick={() =>
                 setMok((state) => {
-                  return [...state, [Symbol(), '', '']];
+                  return [...state, [randomBytes(32).toString('base64'), '', '']];
                 })
               }
             >
@@ -70,7 +77,7 @@ const MapMok: FC<Props> = ({ updateParentMok }: Props) => {
               </svg>
             </AddMokButton>
           </MokWrapper>
-        </>
+        </div>
       )}
     </Droppable>
   );
