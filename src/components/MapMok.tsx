@@ -14,6 +14,7 @@ const MapMok: FC<Props> = ({ updateParentMok }: Props) => {
 
     useEffect(() => {
         updateParentMok({ mokType: 'map', items: mok.map(([, name, item]) => [name, item]) });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mok]);
 
     return (

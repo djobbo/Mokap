@@ -1,6 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import moks from '../generators';
-import { mok } from '../generators/types';
 import { MapMok } from './MapMok';
 import { IJSONMok } from '../generators/parsers';
 
@@ -41,6 +39,7 @@ function Mok({ updateParentMok }: Props): ReactElement {
 
     useEffect(() => {
         updateParentMok(mokState);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mokState]);
 
     return (

@@ -31,7 +31,11 @@ const App: FC = () => {
         setFinalMokValue(JSON.stringify(getMok(parseMok(finalMok))));
     };
 
-    useEffect(() => refreshMok(), [finalMok]);
+    useEffect(
+        () => refreshMok(),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [finalMok],
+    );
 
     return (
         <>
