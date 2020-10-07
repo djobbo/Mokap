@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 
-import { getMok } from '../generators';
 import { Card } from '../components/Card';
 import { Mok } from '../components/Mok';
-import { mok } from '../generators/types';
+import { IJSONMok, parseMok } from '../generators/parsers';
+import { getMok } from '../generators';
 
 const GlobalStyle = createGlobalStyle`
     * {
@@ -23,12 +23,12 @@ const MoksContainer = styled.div`
 `;
 
 const App: FC = () => {
-    const [finalMok, setFinalMok] = useState<mok<any>>(undefined);
-    const [finalMokValue, setFinalMokValue] = useState<unknown>('');
+    const [finalMok, setFinalMok] = useState<IJSONMok>('');
+    const [finalMokValue, setFinalMokValue] = useState<string>('');
 
     const refreshMok = () => {
         console.log('bruh');
-        setFinalMokValue(getMok(finalMok));
+        setFinalMokValue(JSON.stringify(getMok(parseMok(finalMok))));
     };
 
     useEffect(() => refreshMok(), [finalMok]);
@@ -41,7 +41,7 @@ const App: FC = () => {
                     <Mok updateParentMok={setFinalMok} />
                 </MoksContainer>
             </Card>
-            <div>{JSON.stringify(finalMokValue)}</div>
+            <div>{finalMokValue}</div>
         </>
     );
 };

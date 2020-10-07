@@ -1,11 +1,11 @@
 import { mok } from './types';
 import moks, { getMok } from './';
 
-type IJSONMok = IJSONStr | IJSONNumber | IJSONBoolean | IJSONChoice | IJSONMap | string;
+export type IJSONMok = IJSONStr | IJSONNumber | IJSONBoolean | IJSONContainer | IJSONMap | IJSONArray | string;
 
 export const parseMok = (jsonMok: IJSONMok): mok<unknown> => {
     if (typeof jsonMok === 'string') return jsonMok;
-    switch (jsonMok.type) {
+    switch (jsonMok.mokType) {
         default:
             return '';
         case 'str':
@@ -23,15 +23,15 @@ export const parseMok = (jsonMok: IJSONMok): mok<unknown> => {
     }
 };
 
-interface IJSONStr {
-    type: 'str';
+export interface IJSONStr {
+    mokType: 'str';
     regex: string;
 }
 
 export const parseStr = ({ regex }: IJSONStr): mok<string> => moks.str(new RegExp(regex));
 
-interface IJSONNumber {
-    type: 'int' | 'float';
+export interface IJSONNumber {
+    mokType: 'int' | 'float';
     min: number | IJSONNumber;
     max: number | IJSONNumber;
 }
@@ -39,41 +39,51 @@ interface IJSONNumber {
 export const parseNumber = ({ min, max }: IJSONNumber): mok<number> =>
     moks.num(typeof min === 'number' ? min : parseNumber(min), typeof max === 'number' ? max : parseNumber(max));
 
-interface IJSONBoolean {
-    type: 'bool';
+export interface IJSONBoolean {
+    mokType: 'bool';
 }
 
 export const parseBool = (): mok<boolean> => moks.bool;
 
-interface IJSONChoice {
-    type: 'choice';
-    choices: IJSONMok[];
+export interface IJSONContainer {
+    mokType: 'choice' | 'sequenceOf';
+    items: IJSONMok[];
 }
 
-export const parseChoice = ({ choices }: IJSONChoice): mok<unknown> => moks.choice(...choices.map(parseMok));
+export const parseChoice = ({ items }: IJSONContainer): mok<unknown> => moks.choice(...items.map(parseMok));
+export const parseSequenceOf = ({ items }: IJSONContainer): mok<unknown> => moks.sequenceOf(...items.map(parseMok));
 
-interface IJSONMap {
-    type: 'map';
+export interface IJSONMap {
+    mokType: 'map';
     items: [string, IJSONMok][];
 }
 
 export const parseMap = ({ items }: IJSONMap): mok<unknown> =>
     moks.map(items.reduce((acc, [name, val]) => ({ ...acc, [name]: parseMok(val) }), {}));
 
+export interface IJSONArray {
+    mokType: 'array';
+    item: IJSONMok;
+    length: number | IJSONNumber;
+}
+
+export const parseArray = ({ item, length }: IJSONArray): mok<unknown> =>
+    moks.array(parseMok(item), typeof length === 'number' ? length : parseNumber(length));
+
 const test: IJSONMok = {
-    type: 'map',
+    mokType: 'map',
     items: [
         [
             'yolo',
             {
-                type: 'choice',
-                choices: [
+                mokType: 'choice',
+                items: [
                     'yolo',
                     {
-                        type: 'bool',
+                        mokType: 'bool',
                     },
                     {
-                        type: 'str',
+                        mokType: 'str',
                         regex: '[A-Z]',
                     },
                 ],

@@ -5,23 +5,23 @@ import moks from '../generators';
 import { MokWrapper, MokInput, MokInputContainer, AddMokButton } from './MokElements';
 import { Mok } from './Mok';
 import { mok } from '../generators/types';
+import { IJSONMap, IJSONMok } from '../generators/parsers';
 
 interface Props {
-    updateParentMok: (updateMok: mok<any>) => void;
+    updateParentMok: (updateMok: IJSONMok) => void;
 }
 
 const MapMok: FC<Props> = ({ updateParentMok }: Props) => {
-    const [mok, setMok] = useState<[string, string, mok<any>][]>([]);
+    const [mok, setMok] = useState<[symbol, string, IJSONMok][]>([]);
 
     useEffect(() => {
-        const mapMok: { [k in string]: mok<any> } = mok.reduce((acc, [, name, val]) => ({ ...acc, [name]: val }), {});
-        updateParentMok(moks.map(mapMok));
+        updateParentMok({ mokType: 'map', items: mok.map(([, name, item]) => [name, item]) });
     }, [mok]);
 
     return (
         <>
             {mok.map(([key, name, val]) => (
-                <MokWrapper key={key}>
+                <MokWrapper key={key.toString()}>
                     <MokInputContainer>
                         <label>
                             key
@@ -56,7 +56,7 @@ const MapMok: FC<Props> = ({ updateParentMok }: Props) => {
                 <AddMokButton
                     onClick={() =>
                         setMok((state) => {
-                            return [...state, [crypto.randomBytes(48).toString('hex'), '', '']];
+                            return [...state, [Symbol(), '', '']];
                         })
                     }
                 >
