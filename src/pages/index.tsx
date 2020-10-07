@@ -6,6 +6,8 @@ import { Mok } from '../components/Mok';
 import { IJSONMok, parseMok } from '../generators/parsers';
 import { getMok } from '../generators';
 
+import { DragDropContext } from 'react-beautiful-dnd';
+
 const GlobalStyle = createGlobalStyle`
     * {
         font-family: "Inter";
@@ -19,31 +21,33 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const MoksContainer = styled.div`
-    padding: 1rem;
+  padding: 1rem;
 `;
 
 const App: FC = () => {
-    const [finalMok, setFinalMok] = useState<IJSONMok>('');
-    const [finalMokValue, setFinalMokValue] = useState<string>('');
+  const [finalMok, setFinalMok] = useState<IJSONMok>('');
+  const [finalMokValue, setFinalMokValue] = useState<string>('');
 
-    const refreshMok = () => {
-        console.log('bruh');
-        setFinalMokValue(JSON.stringify(getMok(parseMok(finalMok))));
-    };
+  const refreshMok = () => {
+    console.log('bruh');
+    setFinalMokValue(JSON.stringify(getMok(parseMok(finalMok))));
+  };
 
-    useEffect(() => refreshMok(), [finalMok]);
+  useEffect(() => refreshMok(), [finalMok]);
 
-    return (
-        <>
-            <GlobalStyle />
-            <Card title="New Mok">
-                <MoksContainer>
-                    <Mok updateParentMok={setFinalMok} />
-                </MoksContainer>
-            </Card>
-            <div>{finalMokValue}</div>
-        </>
-    );
+  return (
+    <>
+      <GlobalStyle />
+      <Card title="New Mok">
+        <DragDropContext onDragEnd={(e) => console.log(e)}>
+          <MoksContainer>
+            <Mok updateParentMok={setFinalMok} />
+          </MoksContainer>
+        </DragDropContext>
+      </Card>
+      <div>{finalMokValue}</div>
+    </>
+  );
 };
 
 export default App;

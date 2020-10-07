@@ -9,14 +9,14 @@ import { mockMap as map } from './branches/Map';
 import { mockString as str } from './branches/String';
 
 export const getMok = <T>(value: mok<T>, ...index: number[]): T =>
-    value instanceof Function ? value(...index) : value;
+  value instanceof Function ? value(...index) : value;
 
 export default {
-    bool,
-    array,
-    sequenceOf,
-    choice,
-    num,
-    map,
-    str,
+  bool,
+  array,
+  sequenceOf,
+  choice,
+  num,
+  map,
+  str,
 };
