@@ -3,6 +3,8 @@ import Head from 'next/head';
 import type { AppProps } from 'next/app';
 import { ReactElement } from 'react';
 
+import { AuthProvider } from '../context/AuthContext';
+
 function _App({ Component, pageProps }: AppProps): ReactElement {
     return (
         <>
@@ -12,7 +14,9 @@ function _App({ Component, pageProps }: AppProps): ReactElement {
                     rel="stylesheet"
                 />
             </Head>
-            <Component {...pageProps} />
+            <AuthProvider>
+                <Component {...pageProps} />
+            </AuthProvider>
         </>
     );
 }

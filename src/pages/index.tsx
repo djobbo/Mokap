@@ -1,53 +1,44 @@
-import React, { FC, useEffect, useState } from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
+import React, { useEffect, useCallback } from 'react';
+import Link from 'next/link';
+import { useAuth } from '../hooks/useAuth';
+import { firebase } from '../util/firebaseClient';
 
-import { Card } from '../components/Card';
-import { Mok } from '../components/Mok';
-import { IJSONMok, parseMok } from '../generators/parsers';
-import { getMok } from '../generators';
+export const useInterval = (_callback: (...args: any[]) => any, delay: number) => {
+    const callback = useCallback(_callback, []);
+    useEffect(() => {
+        const id = setInterval(callback, delay);
+        return () => clearInterval(id);
+    }, [delay]);
+};
 
-const GlobalStyle = createGlobalStyle`
-    * {
-        font-family: "Inter";
-        box-sizing: border-box;
-        border: none;
-    }
-    
-    body{
-        background-color: #eff1f3;
-    }
-`;
-
-const MoksContainer = styled.div`
-    padding: 1rem;
-`;
-
-const App: FC = () => {
-    const [finalMok, setFinalMok] = useState<IJSONMok>('');
-    const [finalMokValue, setFinalMokValue] = useState<string>('');
-
-    const refreshMok = () => {
-        console.log('bruh');
-        setFinalMokValue(JSON.stringify(getMok(parseMok(finalMok))));
-    };
-
-    useEffect(
-        () => refreshMok(),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [finalMok],
-    );
+const IndexPage = () => {
+    const { user, logout } = useAuth();
 
     return (
-        <>
-            <GlobalStyle />
-            <Card title="New Mok">
-                <MoksContainer>
-                    <Mok updateParentMok={setFinalMok} />
-                </MoksContainer>
-            </Card>
-            <div>{finalMokValue}</div>
-        </>
+        <div style={{ padding: '40px' }}>
+            <p>{`User ID: ${user ? user.uid : 'no user signed in'}`}</p>
+            {user ? (
+                <p>
+                    <button
+                        onClick={async () => {
+                            await logout();
+                        }}
+                    >
+                        Logout
+                    </button>
+                </p>
+            ) : (
+                <>
+                    <p>
+                        <Link href="/authenticated">Go to authenticated route</Link>
+                    </p>
+                    <p>
+                        <Link href="/login">Login</Link>
+                    </p>
+                </>
+            )}
+        </div>
     );
 };
 
-export default App;
+export default IndexPage;
