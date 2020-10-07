@@ -1,11 +1,9 @@
 import React, { FC, useEffect, useState } from 'react';
-import crypto from 'crypto';
 
-import moks from '../generators';
 import { MokWrapper, MokInput, MokInputContainer, AddMokButton } from './MokElements';
 import { Mok } from './Mok';
 import { mok } from '../generators/types';
-import { IJSONMap, IJSONMok } from '../generators/parsers';
+import { IJSONMok } from '../generators/parsers';
 
 interface Props {
     updateParentMok: (updateMok: IJSONMok) => void;
@@ -26,7 +24,7 @@ const MapMok: FC<Props> = ({ updateParentMok }: Props) => {
                         <label>
                             key
                             <MokInput
-                                label
+                                hasLabel
                                 type="text"
                                 value={name}
                                 onChange={(e) =>

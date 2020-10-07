@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import moks from '../generators';
 import { mok } from '../generators/types';
 import { MapMok } from './MapMok';
-import { IJSONMap, IJSONMok } from '../generators/parsers';
+import { IJSONMok } from '../generators/parsers';
 
 import { MokWrapper, MokInput, MokSelect, MokInputContainer } from './MokElements';
 
@@ -15,6 +15,7 @@ function Mok({ updateParentMok }: Props): ReactElement {
 
     const handleMokTypeChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const mokType = e.target.value;
+        console.log(mokType);
         switch (mokType) {
             default:
                 setMokState('');
@@ -26,10 +27,15 @@ function Mok({ updateParentMok }: Props): ReactElement {
                 setMokState({ mokType, items: [] });
                 return;
             case 'array':
+                // setMokState({ mokType, item: '', length: 0 });
                 setMokState({ mokType, item: '', length: 0 });
                 return;
             case 'sequenceOf':
                 setMokState({ mokType, items: [] });
+                return;
+            case 'str':
+                setMokState({ mokType, regex: '' });
+                return;
         }
     };
 
@@ -44,6 +50,7 @@ function Mok({ updateParentMok }: Props): ReactElement {
                 <option value="map">Map</option>
                 <option value="bool">Boolean</option>
                 <option value="array">Array</option>
+                <option value="str">Regex</option>
                 <option value="sequenceOf">Sequence Of</option>
             </MokSelect>
             {typeof mokState === 'string' ? (
@@ -57,6 +64,15 @@ function Mok({ updateParentMok }: Props): ReactElement {
                             <MapMok updateParentMok={setMokState} />
                         </>
                     )}
+                    {mokState.mokType === 'str' && (
+                        <MokWrapper>
+                            <MokInput
+                                type="text"
+                                value={mokState.regex}
+                                onChange={(e) => setMokState({ ...mokState, regex: e.target.value })}
+                            />
+                        </MokWrapper>
+                    )}
                     {mokState.mokType === 'array' && (
                         <>
                             <MokWrapper>
@@ -65,7 +81,7 @@ function Mok({ updateParentMok }: Props): ReactElement {
                                         <label>
                                             length
                                             <MokInput
-                                                label
+                                                hasLabel
                                                 type="number"
                                                 value={mokState.length}
                                                 onChange={(e) => {
@@ -76,11 +92,15 @@ function Mok({ updateParentMok }: Props): ReactElement {
                                             />
                                         </label>
                                     ) : (
-                                        <Mok updateParentMok={setMokState} /> // Number Mok
+                                        <></>
+                                        // TODO: Number mok
+                                        // <Mok
+                                        //     updateParentMok={(jsonMok) => setMokState({ ...mokState, length: jsonMok })}
+                                        // />
                                     )}
                                 </MokInputContainer>
                             </MokWrapper>
-                            <Mok updateParentMok={setMokState} />
+                            <Mok updateParentMok={(jsonMok) => setMokState({ ...mokState, item: jsonMok })} />
                         </>
                     )}
                 </>

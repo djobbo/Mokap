@@ -32,7 +32,7 @@ export const MokWrapper = styled.div`
     }
 `;
 
-export const MokInput = styled.input<{ label?: boolean }>`
+export const MokInput = styled.input<{ hasLabel?: boolean }>`
     padding: 0.75rem 1rem;
     border: none;
     border-radius: 0.5rem;
@@ -46,8 +46,8 @@ export const MokInput = styled.input<{ label?: boolean }>`
         border-color: transparent;
     }
 
-    ${({ label }) =>
-        label &&
+    ${({ hasLabel }) =>
+        hasLabel &&
         `
         border-radius: 0 0.5rem 0.5rem 0;
     `}

@@ -1,5 +1,5 @@
 import { mok } from './types';
-import moks, { getMok } from './';
+import moks from './';
 
 export type IJSONMok = IJSONStr | IJSONNumber | IJSONBoolean | IJSONContainer | IJSONMap | IJSONArray | string;
 
@@ -20,6 +20,8 @@ export const parseMok = (jsonMok: IJSONMok): mok<unknown> => {
             return parseChoice(jsonMok);
         case 'map':
             return parseMap(jsonMok);
+        case 'array':
+            return parseArray(jsonMok);
     }
 };
 
@@ -28,7 +30,13 @@ export interface IJSONStr {
     regex: string;
 }
 
-export const parseStr = ({ regex }: IJSONStr): mok<string> => moks.str(new RegExp(regex));
+export const parseStr = ({ regex }: IJSONStr): mok<string> => {
+    try {
+        return moks.str(new RegExp(regex));
+    } catch (e) {
+        return regex;
+    }
+};
 
 export interface IJSONNumber {
     mokType: 'int' | 'float';
@@ -69,28 +77,3 @@ export interface IJSONArray {
 
 export const parseArray = ({ item, length }: IJSONArray): mok<unknown> =>
     moks.array(parseMok(item), typeof length === 'number' ? length : parseNumber(length));
-
-const test: IJSONMok = {
-    mokType: 'map',
-    items: [
-        [
-            'yolo',
-            {
-                mokType: 'choice',
-                items: [
-                    'yolo',
-                    {
-                        mokType: 'bool',
-                    },
-                    {
-                        mokType: 'str',
-                        regex: '[A-Z]',
-                    },
-                ],
-            },
-        ],
-    ],
-};
-
-const a = parseMok(test);
-console.log(getMok(a));
