@@ -2,13 +2,27 @@ import Head from 'next/head';
 
 import type { AppProps } from 'next/app';
 import { ReactElement } from 'react';
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
+    * {
+        font-family: "Inter";
+        box-sizing: border-box;
+        border: none;
+    }
+    
+    body{
+        background-color: #eff1f3;
+    }
+`;
 
 function _App({ Component, pageProps }: AppProps): ReactElement {
   return (
     <>
       <Head>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
-      </Head>
+      </Head>{' '}
+      <GlobalStyle />
       <Component {...pageProps} />
     </>
   );
