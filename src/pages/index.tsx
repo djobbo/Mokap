@@ -1,6 +1,6 @@
 import React, { FC, PropsWithChildren, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Stage, Layer, Rect, Text } from 'react-konva';
+import { Stage, Layer, Text } from 'react-konva';
 
 import { Card } from '../components/Card';
 import { Mok } from '../components/Mok';
@@ -78,7 +78,8 @@ const App: FC = () => {
   return (
     <>
       <Canvas>
-        <Text text="hello" fontSize={16} />
+        <Text text="hello" fontSize={16} draggable />
+        <Text text="hello" fontSize={16} x={50} y={50} draggable />
       </Canvas>
       <Card title="New Mok">
         <MoksContainer>
@@ -86,6 +87,7 @@ const App: FC = () => {
         </MoksContainer>
       </Card>
       <div>{finalMokValue}</div>
+      <button onClick={refreshMok}>Refresh</button>
     </>
   );
 };
