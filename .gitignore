@@ -1,13 +1,8 @@
 logs
 *.log
 
-coverage/
 node_modules/
 
 .env
 
-.next/
-
 dist/
-
-.parcel-cache/

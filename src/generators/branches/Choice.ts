@@ -1,5 +1,12 @@
 import { randomValueFromArray } from '../generators';
-import { mok } from '../types';
-import { getMok } from '../';
+import { mock } from '../';
+import { Mok, mok } from '../Mok';
 
-export const mockChoice = <T>(...value: mok<T>[]) => (...i: number[]): T => getMok(randomValueFromArray(value), ...i);
+/**
+ * Returns a **Choice Generator** which returns a random element when called.
+ *
+ * @param ...values - List of **static values** and/or **generators** to be chosen from.
+ * @return Choice Generator
+ */
+export const mockChoice = <T>(...values: mok<T>[]) =>
+	new Mok<T>((...i: number[]): T => mock(randomValueFromArray(values), ...i));
