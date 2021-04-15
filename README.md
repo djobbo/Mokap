@@ -2,6 +2,11 @@
 
 Data mocking made fun
 
+> **Disclaimer**  
+> NPM package isn't up to date  
+> Documentation is still being  
+> Tests only cover a very small percentage of the code
+
 ## Installation
 
 install via npm  
