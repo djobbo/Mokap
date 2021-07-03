@@ -4,7 +4,7 @@ Data mocking made fun
 
 > **Disclaimer**  
 > NPM package isn't up to date  
-> Documentation is still being  
+> Documentation is still being written  
 > Tests only cover a very small percentage of the code
 
 ## Installation

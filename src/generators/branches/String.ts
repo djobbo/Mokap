@@ -1,19 +1,13 @@
 import ret, { Char, Group, Set, Range, Root, Tokens, types } from 'ret';
 import DRange from 'drange';
 import { randomBoolean, randomInt, randomValueFromArray } from '../generators';
+import { Mok } from '../Mok';
 
-const {
-	ROOT,
-	GROUP,
-	POSITION,
-	SET,
-	REPETITION,
-	REFERENCE,
-	CHAR,
-	RANGE,
-} = types;
+const { ROOT, GROUP, POSITION, SET, REPETITION, REFERENCE, CHAR, RANGE } =
+	types;
 
-export const mockString = (value: RegExp) => (): string => RandExp(value);
+export const mockString = (value: RegExp) =>
+	new Mok<string>((): string => RandExp(value));
 
 const toOtherCase = (code: number) =>
 	code +
@@ -44,11 +38,11 @@ export const RandExp = (regexp: RegExp): string => {
 	return gen(tokens, [], options)[0];
 };
 
-function genGroup(
+const genGroup = (
 	token: Root | Group,
 	groups: string[] = [],
 	options: IGenOptions
-): [string, string[]] {
+): [string, string[]] => {
 	const stack = token.options
 		? randomValueFromArray(token.options)
 		: token.stack || [];
@@ -60,13 +54,43 @@ function genGroup(
 		},
 		['', groups]
 	);
-}
+};
 
-function gen(
+const expandSet = (token: Char | Range | Set, options: IGenOptions) => {
+	switch (token.type) {
+		case CHAR:
+			return new DRange(token.value);
+
+		case RANGE:
+			return new DRange(token.from, token.to);
+
+		case SET: {
+			const drange = new DRange();
+
+			for (let i = 0; i < token.set.length; i++) {
+				const subrange = expandSet(token.set[i], options);
+				drange.add(subrange);
+
+				if (options.ignoreCase)
+					for (let j = 0; j < subrange.length; j++) {
+						const code = subrange.index(j);
+						const otherCaseCode = toOtherCase(code);
+						if (code !== otherCaseCode) drange.add(otherCaseCode);
+					}
+			}
+
+			return token.not
+				? options.defaultRange.clone().subtract(drange)
+				: options.defaultRange.clone().intersect(drange);
+		}
+	}
+};
+
+const gen = (
 	token: Tokens,
 	groups: string[] = [],
 	options: IGenOptions
-): [string, string[]] {
+): [string, string[]] => {
 	let str = '';
 	let newGroups: string[] = groups;
 
@@ -122,34 +146,4 @@ function gen(
 		}
 	}
 	return [str, newGroups];
-}
-
-function expandSet(token: Char | Range | Set, options: IGenOptions) {
-	switch (token.type) {
-		case CHAR:
-			return new DRange(token.value);
-
-		case RANGE:
-			return new DRange(token.from, token.to);
-
-		case SET: {
-			const drange = new DRange();
-
-			for (let i = 0; i < token.set.length; i++) {
-				const subrange = expandSet(token.set[i], options);
-				drange.add(subrange);
-
-				if (options.ignoreCase)
-					for (let j = 0; j < subrange.length; j++) {
-						const code = subrange.index(j);
-						const otherCaseCode = toOtherCase(code);
-						if (code !== otherCaseCode) drange.add(otherCaseCode);
-					}
-			}
-
-			return token.not
-				? options.defaultRange.clone().subtract(drange)
-				: options.defaultRange.clone().intersect(drange);
-		}
-	}
-}
+};

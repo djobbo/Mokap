@@ -1,9 +1,10 @@
 {
 	"name": "mokap",
-	"version": "1.0.0",
+	"version": "0.0.4",
 	"description": "Data mocking",
 	"main": "index.js",
 	"scripts": {
+		"build": "tsc",
 		"test": "jest"
 	},
 	"repository": {
@@ -11,7 +12,7 @@
 		"url": "git+https://github.com/AlfieGoldson/Mokap.git"
 	},
 	"keywords": [],
-	"author": "",
+	"author": "AlfieGoldson",
 	"license": "ISC",
 	"bugs": {
 		"url": "https://github.com/AlfieGoldson/Mokap/issues"
